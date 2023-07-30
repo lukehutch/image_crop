@@ -53,7 +53,7 @@ class CropController extends ChangeNotifier {
 
   double _startScale = 1;
 
-  late ImageStream _imageStream;
+  ImageStream? _imageStream;
 
   ui.Image? _image;
 
@@ -161,6 +161,7 @@ class CropController extends ChangeNotifier {
 
   void _disposeImageStream() {
     _imageStream?.removeListener(_imageStreamListener);
+    _imageStream = null;
   }
 
   void resolveImage(ImageConfiguration config) {
