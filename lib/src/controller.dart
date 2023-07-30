@@ -167,7 +167,7 @@ class CropController extends ChangeNotifier {
   void resolveImage(ImageConfiguration config) {
     _disposeImageStream();
     _imageStream = imageProvider.resolve(config);
-    _imageStream.addListener(_imageStreamListener);
+    _imageStream!.addListener(_imageStreamListener);
   }
 
   void handleScaleStart(ScaleStartDetails details) {
