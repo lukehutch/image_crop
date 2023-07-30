@@ -81,17 +81,11 @@ class CropController extends ChangeNotifier {
     return max(_cropArea.width / image.width, _cropArea.height / image.height);
   }
 
-  late ImageStreamListener _imageStreamListener;
-
-  @override
-  initState() {
-    _imageStreamListener =
-        ImageStreamListener(_updateImage, onError: _onImageError);
-  }
+  ImageStreamListener? _imageStreamListener;
 
   @override
   void dispose() {
-    _disposeImageStream();
+    _disposeImageStreamListener();
     _activeAnimation?.dispose();
     _submitBtnState?.dispose();
     _submitBtnState = null;
@@ -159,14 +153,18 @@ class CropController extends ChangeNotifier {
     }
   }
 
-  void _disposeImageStream() {
-    _imageStream?.removeListener(_imageStreamListener);
-    _imageStream = null;
+  void _disposeImageStreamListener() {
+    if (_imageStreamListener != null) {
+      _imageStream?.removeListener(_imageStreamListener);
+      _imageStreamListener = null;
+    }
   }
 
   void resolveImage(ImageConfiguration config) {
-    _disposeImageStream();
+    _disposeImageStreamListener();
     _imageStream = imageProvider.resolve(config);
+    _imageStreamListener =
+        ImageStreamListener(_updateImage, onError: _onImageError);
     _imageStream!.addListener(_imageStreamListener);
   }
 
