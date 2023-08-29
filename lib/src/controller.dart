@@ -16,12 +16,13 @@ enum _CropAction { move, resizeCropArea, scale }
 enum CropHandle { topLeft, bottomRight }
 
 typedef OnCropError = void Function(ImageCropError);
-typedef OnCropDone = FutureOr<void> Function(MemoryImage);
+typedef OnCropDone = FutureOr<void> Function(ui.Image);
 
 class CropController extends ChangeNotifier {
   final ImageProvider imageProvider;
   final TargetSize target;
   double _maximumScale;
+  final ui.ImageByteFormat imageByteFormat;
 
   final OnCropDone onDone;
   final OnCropError onError;
@@ -67,6 +68,7 @@ class CropController extends ChangeNotifier {
 
   CropController({
     required this.imageProvider,
+    this.imageByteFormat = ui.ImageByteFormat.png,
     required this.onDone,
     required this.onError,
     required this.target,
@@ -128,14 +130,7 @@ class CropController extends ChangeNotifier {
           (target.height * pixelRatio).toInt(),
         );
         try {
-          final data = await image.toByteData(format: ui.ImageByteFormat.png);
-          if (data == null) {
-            onError(ImageCropError.noData());
-            return;
-          }
-          await onDone(
-            MemoryImage(data.buffer.asUint8List(), scale: pixelRatio),
-          );
+          await onDone(image);
         } catch (e, st) {
           onError(ImageCropError.imageDecode(e, st));
         } finally {
