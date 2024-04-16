@@ -31,7 +31,7 @@ class TargetSize {
   }
 
   /// Create a new Rect centered in [container] while completely covering it
-  Rect cover(Rect container) {
+  Rect cover(Rect container, double devicePixelRatio) {
     assert(container.width >= 0,
         'Container width should be greater or equal to 0');
     assert(container.height >= 0,
@@ -41,8 +41,8 @@ class TargetSize {
 
     return Rect.fromCenter(
       center: container.center,
-      width: width * ratio,
-      height: height * ratio,
+      width: width * ratio / devicePixelRatio,
+      height: height * ratio / devicePixelRatio,
     );
   }
 

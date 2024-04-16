@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'button.dart';
@@ -65,6 +66,10 @@ class CropController extends ChangeNotifier {
   Rect get cropArea => _cropArea;
 
   double get scale => _scale;
+
+  // TODO: this is a hack to make devicePixelRatio available in some methods that it's difficult to pass it to
+  double _devicePixelRatio =
+      PlatformDispatcher.instance.views.first.devicePixelRatio;
 
   CropController({
     required this.imageProvider,
@@ -251,11 +256,13 @@ class CropController extends ChangeNotifier {
     );
     final smaller = min(area.width, area.height);
     if (smaller < kMinCropArea) {
-      area = target.cover(Rect.fromCenter(
-        center: _cropArea.center,
-        width: kMinCropArea,
-        height: kMinCropArea,
-      ));
+      area = target.cover(
+          Rect.fromCenter(
+            center: _cropArea.center,
+            width: kMinCropArea,
+            height: kMinCropArea,
+          ),
+          _devicePixelRatio);
     }
     if (area != _cropArea) {
       _cropArea = area;
@@ -381,7 +388,7 @@ class CropController extends ChangeNotifier {
 
     if (image != null && vp != null) {
       final target = TargetSize(image.width, image.height);
-      _imageView = target.cover(vp);
+      _imageView = target.cover(vp, _devicePixelRatio);
       _scale = target.scaleFactor(_imageView);
       if (_scale > _maximumScale) {
         _maximumScale = _scale;

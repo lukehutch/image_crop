@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'controller.dart';
 
 class ImageCropper extends StatelessWidget {
   final CropController ctrl;
+
   /// Scale image based on device pixel ratio for best quality.
   /// Fix this value to 1 if you always want to have an exact size.
   final double devicePixelRatio;
@@ -19,7 +21,7 @@ class ImageCropper extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Crop(ctrl),
+        Crop(ctrl, devicePixelRatio),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -41,8 +43,12 @@ class ImageCropper extends StatelessWidget {
 
 class Crop extends StatelessWidget {
   final CropController ctrl;
+  final double devicePixelRatio;
 
-  const Crop(this.ctrl, {super.key});
+  const Crop(
+    this.ctrl,
+    this.devicePixelRatio,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +59,7 @@ class Crop extends StatelessWidget {
         onScaleStart: ctrl.handleScaleStart,
         onScaleUpdate: ctrl.handleScaleUpdate,
         onScaleEnd: ctrl.handleScaleEnd,
-        child: CropCanvas(ctrl),
+        child: CropCanvas(ctrl, devicePixelRatio),
       ),
     );
   }
@@ -61,8 +67,9 @@ class Crop extends StatelessWidget {
 
 class CropCanvas extends StatefulWidget {
   final CropController ctrl;
+  final double devicePixelRatio;
 
-  const CropCanvas(this.ctrl);
+  const CropCanvas(this.ctrl, this.devicePixelRatio);
 
   @override
   State<CropCanvas> createState() {
@@ -103,15 +110,19 @@ class _CropCanvasState extends State<CropCanvas> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: CropPainter(widget.ctrl),
+      painter: CropPainter(widget.ctrl, widget.devicePixelRatio),
     );
   }
 }
 
 class CropPainter extends CustomPainter {
   final CropController ctrl;
+  final double pixelRatio;
 
-  CropPainter(this.ctrl);
+  CropPainter(
+    this.ctrl,
+    this.pixelRatio,
+  );
 
   @override
   bool shouldRepaint(CropPainter oldDelegate) {

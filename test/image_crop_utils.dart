@@ -229,22 +229,16 @@ class _TestImageProvider implements ImageProvider<_TestImageProvider> {
   }
 
   @override
-  // ignore: deprecated_member_use
-  ImageStreamCompleter load(_TestImageProvider key, DecoderCallback decode) {
+  Future<ImageCacheStatus?> obtainCacheStatus(
+      {required ImageConfiguration configuration,
+      ImageErrorListener? handleError}) {
     throw UnimplementedError();
   }
 
   @override
   ImageStreamCompleter loadBuffer(
-      // ignore: deprecated_member_use
       _TestImageProvider key, DecoderBufferCallback decode) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<ImageCacheStatus?> obtainCacheStatus(
-      {required ImageConfiguration configuration,
-      ImageErrorListener? handleError}) {
+    // TODO: implement loadBuffer
     throw UnimplementedError();
   }
 }
