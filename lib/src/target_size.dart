@@ -41,8 +41,8 @@ class TargetSize {
 
     return Rect.fromCenter(
       center: container.center,
-      width: width * ratio / devicePixelRatio,
-      height: height * ratio / devicePixelRatio,
+      width: width * ratio, // / devicePixelRatio,
+      height: height * ratio, // / devicePixelRatio,
     );
   }
 
